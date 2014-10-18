@@ -10,11 +10,12 @@
 #include <arpa/inet.h>
 #include "db.h"
 #include "transcode.h"
+#include "dic.h"
 
-void ser_register(int confd, char *usrname, unsigned int len
+void ser_register(int confd, char *usrname, unsigned int len 
 		, unsigned char * data)
 {
-	switch(db_signin(usrname, data)
+	switch(db_signin(usrname, data))
 	{
 		case 0:
 			write(confd
@@ -23,7 +24,7 @@ void ser_register(int confd, char *usrname, unsigned int len
 						,0
 						,0
 						,NULL)
-				,sizeof(XProtocal));
+				,sizeof(struct XProtocal));
 			break;
 		case 1:
 			write(confd
@@ -32,7 +33,7 @@ void ser_register(int confd, char *usrname, unsigned int len
 						,ERR_USR_EXIST
 						,0
 						,NULL)
-				,sizeof(XProtocal));
+				,sizeof(struct XProtocal));
 			break;
 		case -1:
 			write(confd
@@ -41,17 +42,17 @@ void ser_register(int confd, char *usrname, unsigned int len
 						,ERR_UNKNOWN
 						,0
 						,NULL)
-				,sizeof(XProtocal));
+				,sizeof(struct XProtocal));
 
 			break;
 	}
 	return;
 }
 
-void ser_login(int confd, char *usrname, unsigned int len
+void ser_login(int confd, char *usrname, unsigned int len 
 		, unsigned char * data)
 {
-	switch(db_login(usrname, data)
+	switch(db_login(usrname, data))
 	{
 		case 0:
 			write(confd
@@ -60,7 +61,7 @@ void ser_login(int confd, char *usrname, unsigned int len
 						,0
 						,0
 						,NULL)
-				,sizeof(XProtocal));
+				,sizeof(struct XProtocal));
 			break;
 		case 1:
 			write(confd
@@ -69,7 +70,7 @@ void ser_login(int confd, char *usrname, unsigned int len
 						,ERR_USR_NOEXIST
 						,0
 						,NULL)
-				,sizeof(XProtocal));
+				,sizeof(struct XProtocal));
 			break;
 		case -1:
 			write(confd
@@ -78,7 +79,7 @@ void ser_login(int confd, char *usrname, unsigned int len
 						,ERR_UNKNOWN
 						,0
 						,NULL)
-				,sizeof(XProtocal));
+				,sizeof(struct XProtocal));
 			break;
 	}
 	return;
@@ -94,11 +95,11 @@ void ser_queryword(int confd, char *usrname, unsigned int len
 		//no active user
 			write(confd
 				,trans_encode(usrname
-						,RPL_QUERY
+						,RPL_QUERYWORD
 						,ERR_USR_NA
 						,0
 						,NULL)
-				,sizeof(XProtocal));
+				,sizeof(struct XProtocal));
 			break;
 		case 1:
 		//user is active 
@@ -107,35 +108,41 @@ void ser_queryword(int confd, char *usrname, unsigned int len
 			{
 				write(confd
 					,trans_encode(usrname
-							,RPL_QUERY
+							,RPL_QUERYWORD
 							,0
 						       ,strlen(expbuf)+1
 							,expbuf)
-					,sizeof(XProtocal));
+					,sizeof(struct XProtocal));
 			}else
 			{
 				write(confd
 					,trans_encode(usrname
-							,RPL_QUERY
+							,RPL_QUERYWORD
 							,ERR_WORD_NA
 							,0
 							,NULL)
-					,sizeof(XProtocal));
+					,sizeof(struct XProtocal));
 
 			}
 			break;
 		default:
 			write(confd
 				,trans_encode(usrname
-						,RPL_QUERY
+						,RPL_QUERYWORD
 						,ERR_UNKNOWN
 						,0
 						,NULL)
-				,sizeof(XProtocal));
+				,sizeof(struct XProtocal));
 			break;
 	}
 	return;
 }
+
+struct callback_par
+{
+	int fd;
+	char * un;
+};
 
 int ser_history_method(
 	void *arg, 
@@ -145,23 +152,22 @@ int ser_history_method(
 	)
 {
 	
-	int* pfd = (int *)arg[0];
-	int confd = *pfd;
-	char *usrname = (char *)arg[1];
+	struct callback_par* pfd = (struct callback_par*)arg;
+	int confd = pfd->fd;
+	char *usrname = pfd->un;
 	write(confd
 		,trans_encode(usrname
 				,RPL_HISTORY
 				,0
 				,strlen(column_value[1])+1
-				,colum_value[1])
-		,sizeof(XProtocal));
-
-        printf("%s|", column_value[i]);
+				,column_value[1])
+		,sizeof(struct XProtocal));
 }
 
 void ser_history(int confd, char *usrname, unsigned int len
 		, unsigned char * data)
 {
+	struct callback_par parameter;
 	switch(db_islogin(usrname))
 	{
 		case 0:
@@ -172,14 +178,13 @@ void ser_history(int confd, char *usrname, unsigned int len
 						,ERR_USR_NA
 						,0
 						,NULL)
-				,sizeof(XProtocal));
+				,sizeof(struct XProtocal));
 			break;
 		case 1:
 		//user is active 
-			void *p[2];
-			p[1] = usrname;
-			p[0] = &confd;
-			db_history_get(usrname, ser_history_method, p)
+			parameter.fd = confd;
+			parameter.un = usrname;
+			db_history_get(usrname, ser_history_method, &parameter);
 			break;
 		default:
 			write(confd
@@ -188,7 +193,7 @@ void ser_history(int confd, char *usrname, unsigned int len
 						,ERR_UNKNOWN
 						,0
 						,NULL)
-				,sizeof(XProtocal));
+				,sizeof(struct XProtocal));
 			break;
 	}
 	return;
@@ -203,7 +208,7 @@ void reaper(int signo)
 int main(int argc, char * argv[])
 {
 	int listenfd;
-	char buf[sizeof(XProtocal)];
+	char buf[sizeof(struct XProtocal)];
 	if((listenfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
 		perror("socket");
@@ -266,11 +271,10 @@ int main(int argc, char * argv[])
 			close(listenfd);
 			while(1)
 			{
-				
 				recvsize = read(confd, buf, sizeof(buf));
 				switch(trans_decode(buf
 					,usrname
-					,NULL,len,data))
+					,NULL,&len,data))
 				{
 					case REQ_REGISTER:
 						ser_register(confd,usrname,len,data);
@@ -284,8 +288,8 @@ int main(int argc, char * argv[])
 					case REQ_HISTORY:
 						ser_history(confd,usrname,len,data);
 						break;
-					case REQ_EXIT;
-						close(fd);
+					case REQ_EXIT:
+						close(confd);
 						printf("connection ended\n");
 						exit(EXIT_SUCCESS);
 
@@ -293,8 +297,8 @@ int main(int argc, char * argv[])
 					default:
 						printf("unknown req\n");
 						write(confd
-							,trans_encode(usrname,REQ_LOGIN,ERR_UNKOWN,NULL)
-							, sizeof(XProtocal));
+							,trans_encode(usrname,REQ_LOGIN,ERR_UNKNOWN, 0,NULL)
+							, sizeof(struct XProtocal));
 						break;
 				}
 

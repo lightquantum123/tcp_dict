@@ -259,7 +259,7 @@ int db_history_put(char * username,char * word)
 	return exec_sql(cmd, globaldb);
 }
 
-int db_history_get(char * username,  int (*callback)(void*,int,char**,char**))
+int db_history_get(char * username,  int (*callback)(void*,int,char**,char**), void *p)
 {
 	char cmd[256];
 	sprintf(cmd,"SELECT * FROM history WHERE "
@@ -272,7 +272,7 @@ int db_history_get(char * username,  int (*callback)(void*,int,char**,char**))
     			globaldb,	/* handler to the db connection */
     			cmd, 	/* SQL statements */
     			callback,/* callback */ 
-    			NULL, 	/* param to the callback */
+    			p, 	/* param to the callback */
     			&errmsg)) {	/* error message */
         fprintf(stderr, "sqlite3_exec(%s): %s.\n", cmd, errmsg);
         sqlite3_free(errmsg);

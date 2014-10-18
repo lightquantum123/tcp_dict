@@ -1,2 +1,2 @@
-int dic_getexp(char * word,char *exp)
+int dic_getexp(char * word,char *exp);
 
