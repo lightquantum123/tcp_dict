@@ -185,12 +185,12 @@ int db_islogin(char * username)
 	int result = 0;
 	sprintf(cmd,"SELECT name,passwd FROM loginlist WHERE "
 		"name='%s' AND state='A';"
-		,username, passwd);
+		,username);
 
 	char *errmsg;
 
 	if( SQLITE_OK != sqlite3_exec(
-    			db,	/* handler to the db connection */
+    			globaldb,	/* handler to the db connection */
     			cmd, 	/* SQL statements */
     			db_check_exist_method,/* callback */ 
     			&result, 	/* param to the callback */
@@ -282,4 +282,5 @@ int db_history_get(char * username,  int (*callback)(void*,int,char**,char**), v
 	return 0;
 
 }
+
 
