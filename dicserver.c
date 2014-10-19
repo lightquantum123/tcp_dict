@@ -155,13 +155,16 @@ int ser_history_method(
 	struct callback_par* pfd = (struct callback_par*)arg;
 	int confd = pfd->fd;
 	char *usrname = pfd->un;
+	char data[MAXLEN_DATA];
+	sprintf(data,"%s%s",column_value[1], column_value[2]);
 	write(confd
 		,trans_encode(usrname
 				,RPL_HISTORY
 				,0
-				,strlen(column_value[1])+1
-				,column_value[1])
+				,strlen(data)+1
+				,data)
 		,sizeof(struct XProtocal));
+	return 0;
 }
 
 void ser_history(int confd, char *usrname, unsigned int len
