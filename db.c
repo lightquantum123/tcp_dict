@@ -10,7 +10,7 @@
 
 static sqlite3 *globaldb = NULL;
 
-static int show_sql_result(
+int show_sql_result(
 	void *arg, 
 	int n_column, 
 	char **column_value, 
@@ -58,7 +58,8 @@ static int db_check_exist_method(
 	)
 {
 	int * p = (int *) arg;
-	*p++;
+	(*p)++;
+	return 0;
 }
 
 
@@ -159,8 +160,6 @@ int db_login(char * username, char * passwd)
 	char cmd[256];
 	if((exist = db_check_passwd(username, passwd, globaldb)) == 1)
 	{
-		//user does not exist
-		//create new user
 		sprintf(cmd,"update loginlist set state='A'"
 			" where name='%s' AND passwd='%s'", username, passwd);
 		exec_sql(cmd, globaldb);

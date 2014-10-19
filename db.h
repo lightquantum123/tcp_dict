@@ -1,3 +1,9 @@
+int show_sql_result(
+	void *arg, 
+	int n_column, 
+	char **column_value, 
+	char **column_name
+	);
 
 int db_initializer();
 
