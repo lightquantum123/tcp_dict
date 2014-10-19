@@ -1,3 +1,9 @@
+/*
+ * dicserver.c
+ *
+ *  Created on: Oct 19, 2014
+ *      Author: Ziyuan Jiang
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -282,6 +288,8 @@ int main(int argc, char * argv[])
 			while(1)
 			{
 				recvsize = read(confd, buf, sizeof(buf));
+				if(recvsize != sizeof(buf))
+					break;
 				switch(trans_decode(buf
 					,usrname
 					,NULL,&len,data))

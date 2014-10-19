@@ -1,3 +1,9 @@
+/*
+ * transcode.h
+ *
+ *  Created on: Oct 19, 2014
+ *      Author: Ziyuan Jiang
+ */
 #include <inttypes.h>
 
 #define MAXLEN_USRNAME 8

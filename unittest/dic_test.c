@@ -1,3 +1,9 @@
+/*
+ * dic_test.c
+ *
+ *  Created on: Oct 19, 2014
+ *      Author: Ziyuan Jiang
+ */
 #include <stdio.h>
 #include <string.h>
 #include "../dic.h"

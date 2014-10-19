@@ -1,3 +1,9 @@
+/*
+ * db.c
+ *
+ *  Created on: Oct 19, 2014
+ *      Author: Ziyuan Jiang
+ */
 #include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,3 +1,9 @@
+/*
+ * db.h
+ *
+ *  Created on: Oct 19, 2014
+ *      Author: Ziyuan Jiang
+ */
 int show_sql_result(
 	void *arg, 
 	int n_column, 
