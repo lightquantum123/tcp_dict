@@ -7,7 +7,7 @@ int show_sql_result(
 
 int db_initializer();
 
-int db_signin(char * username, char * passwd);
+int db_signup(char * username, char * passwd);
 
 int db_login(char * username, char * passwd);
 

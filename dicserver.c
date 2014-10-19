@@ -15,7 +15,7 @@
 void ser_register(int confd, char *usrname, unsigned int len 
 		, unsigned char * data)
 {
-	switch(db_signin(usrname, data))
+	switch(db_signup(usrname, data))
 	{
 		case 0:
 			write(confd
@@ -185,6 +185,13 @@ void ser_history(int confd, char *usrname, unsigned int len
 			parameter.fd = confd;
 			parameter.un = usrname;
 			db_history_get(usrname, ser_history_method, &parameter);
+			write(confd
+				,trans_encode(usrname
+						,RPL_HISTORY
+						,ERR_HISTORY_END
+						,0
+						,NULL)
+				,sizeof(struct XProtocal));
 			break;
 		default:
 			write(confd
@@ -290,6 +297,7 @@ int main(int argc, char * argv[])
 						break;
 					case REQ_EXIT:
 						close(confd);
+						db_logout(usrname);
 						printf("connection ended\n");
 						exit(EXIT_SUCCESS);
 
@@ -313,7 +321,6 @@ int main(int argc, char * argv[])
 				}
 
 			}
-			db_logout(usrname);
 			close(confd);
 			printf("connection ended\n");
 			exit(EXIT_SUCCESS);

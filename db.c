@@ -129,7 +129,7 @@ int db_initializer()
 	return 0;
 }
 
-int db_signin(char * username, char * passwd)
+int db_signup(char * username, char * passwd)
 {
 	int exist = 0;
 	char cmd[256];

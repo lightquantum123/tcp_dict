@@ -4,8 +4,13 @@ UNIE = db_test dic_test transcode_test
 
 export UNIE
 
+all: server client
+
 server: db.o dic.o transcode.o dicserver.o
 	gcc $^ -o $@ -lsqlite3
+
+client: transcode.o dicclient.o
+	gcc $^ -o $@
 
 db.o: db.c
 	gcc -c $^ -o $@ -lsqlite3
@@ -17,6 +22,9 @@ transcode.o: transcode.c
 	gcc -c $^ -o $@
 
 dicserver.o: dicserver.c
+	gcc -c $^ -o $@
+
+dicclient.o: dicclient.c
 	gcc -c $^ -o $@
 
 unitt: db_test dic_test transcode_test

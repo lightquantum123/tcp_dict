@@ -7,8 +7,8 @@ int main()
 {
 	db_initializer();
 	//should show signed in
-	printf("db_signin(a,12345)\n");
-	switch(db_signin("a","12345"))
+	printf("db_signup(a,12345)\n");
+	switch(db_signup("a","12345"))
 	{
 		case 0:
 			printf("db_signed in\n");
@@ -21,8 +21,8 @@ int main()
 			break;
 	}
 	//should show already exist
-	printf("db_signin(a,12345)\n");
-	switch(db_signin("a","12345"))
+	printf("db_signup(a,12345)\n");
+	switch(db_signup("a","12345"))
 	{
 		case 0:
 			printf("db_signed in\n");

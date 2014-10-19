@@ -17,6 +17,7 @@
 #define ERR_USR_NOEXIST (unsigned short)0x0003
 #define ERR_USR_NA (unsigned short)0x0004
 #define ERR_WORD_NA (unsigned short)0x0005
+#define ERR_HISTORY_END (unsigned short)0x0006
 
 struct XProtocal
 {
