@@ -1,18 +1,19 @@
 #include <stdio.h>
 #include "dic.h"
+#include <string.h>
 
 int dic_getexp(char * word,char *exp)
 {
 	FILE * fp;
 	char *p;
 	char expbuf[300];
-	fp = fopen("./dict.txt",'r');
+	fp = fopen("./dict.txt","r");
 	if(fp == NULL)
 		return -1;
 	
 	do{
 		p = fgets(expbuf,300,fp);
-		if(strncmp(p,word,strlen(word)) != 0)
+		if(strncmp(p,word,strlen(word)) == 0)
 			break;
 	}while(p != NULL);
 	
@@ -20,7 +21,7 @@ int dic_getexp(char * word,char *exp)
 		return -1;
 	else
 	{
-		*p += strlen(word);
+		p += strlen(word);
 		while(*p == ' ')
 			++p;
 		strcpy(exp, p);

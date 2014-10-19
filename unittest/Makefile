@@ -6,7 +6,7 @@ db_test: $(PARDIR)/db.o db_test.c
 dic_test: $(PARDIR)/dic.o dic_test.c
 	gcc $^ -o $@
 
-transcode_test: $(PARDIR)/transcode.o trancode_test.c
+transcode_test: $(PARDIR)/transcode.o transcode_test.c
 	gcc $^ -o $@
 
 .PHONY clean:

@@ -21,7 +21,7 @@ unsigned short trans_decode(const char* buf, char *usrname
 	if(retval != NULL)
 		*retval = ntohs(pxp->ret_val);
 	if(len != NULL)
-		*len = ntohs(pxp->data_len);
+		*len = ntohl(pxp->data_len);
 	if(usrname != NULL)
 		strcpy(usrname,pxp->usrname);
 	if(data != NULL)
@@ -41,6 +41,10 @@ char * trans_encode(char * usrname, unsigned short cmd
 {
 	int i = 0;
 	static struct XProtocal buf;
+	if(usrname != NULL)
+	{
+		strcpy(buf.usrname,usrname);
+	}
 	buf.cmd_type = htons(cmd);
 	buf.ret_val = htons(retval);
 	buf.data_len = htonl(len);
