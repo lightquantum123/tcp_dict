@@ -34,10 +34,20 @@ struct XProtocal
 	unsigned char data[MAXLEN_DATA];
 };
 
+/*
+	decode the given buff and save the values to the location
+	of the pointers
+The function will return the type(purpose) of this package.
+*/
 unsigned short trans_decode(const char* buf, char *usrname 
 		,unsigned short * retval,unsigned int * len
 		,unsigned char *data);
 
+/*
+	encode the given values and return 
+	the pointer of the encoded package  
+the caller can not free the return pointer.  
+*/
 char * trans_encode(char * usrname, unsigned short cmd 
 		, unsigned short retval
 		, unsigned int len

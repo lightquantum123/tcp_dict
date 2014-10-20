@@ -249,7 +249,7 @@ void help()
 {
 	printf("legal commands are:\n");
 	printf("	signup\n");
-	printf("	signin\n");
+	printf("	login\n");
 	printf("	search\n");
 	printf("	history\n");
 	printf("	logout\n");
